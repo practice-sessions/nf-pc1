@@ -1,0 +1,6 @@
+/node_modules
+pseudocode.text
+package-lock.json
+/config/keys.js
+/config/passport.js
+.vscode
