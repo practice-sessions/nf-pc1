@@ -42,4 +42,26 @@ apiRouter.get('/:todoId', (req, res) => {
 		.catch((err) => res.send(err));
 });
 
+// @route   POST api/v1/todos/:todoId
+// @desc    Update todos route
+// @access  Public
+apiRouter.post('/:todoId', (req, res) => {
+	Todo.findOneAndUpdate({ _id: req.params.todoId }, req.body)
+		.then((todo) => {
+			res.json(todo);
+		})
+		.catch((err) => res.send(err));
+});
+
+// @route   DELETE api/v1/todos/:todoId
+// @desc    Delete todos route
+// @access  Public
+apiRouter.delete('/:todoId', (req, res) => {
+	Todo.deleteOne({ _id: req.params.todoId })
+		.then(() => {
+			res.json({ item: 'has now been deleted...' });
+		})
+		.catch((err) => res.send(err));
+});
+
 module.exports = apiRouter;
