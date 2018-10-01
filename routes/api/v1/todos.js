@@ -20,13 +20,24 @@ apiRouter.get('/all', (req, res) => {
 		.catch((err) => res.status(404).json({ todo: 'There is nothing on your todos list' }));
 });
 
-// @route   POST api/v1/todo
+// @route   POST api/v1/todos
 // @desc    Create or edit todos route
 // @access  Public
 apiRouter.post('/', (req, res) => {
 	Todo.create(req.body)
 		.then((newTodo) => {
 			res.status(201).json(newTodo);
+		})
+		.catch((err) => res.send(err));
+});
+
+// @route   GET api/v1/todos/:todoId
+// @desc    Get a specific todo route
+// @access  Public
+apiRouter.get('/:todoId', (req, res) => {
+	Todo.findById(req.params.todoId)
+		.then((foundTodo) => {
+			res.json(foundTodo);
 		})
 		.catch((err) => res.send(err));
 });
