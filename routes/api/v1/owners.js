@@ -16,7 +16,7 @@ apiRouter.get('/test', (req, res) => res.json({ message: 'Owners does work!' }))
 // @access   Public
 apiRouter.get('/:ownerId', (req, res) => {
 	Owner.findById(req.params.ownerId)
-		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
+		//	.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
 		.then((owner) => res.json(owner));
 });
 //.catch((err) => res.status(404).json({ owner: 'This owner doesnt exist on our records' }));
@@ -26,7 +26,7 @@ apiRouter.get('/:ownerId', (req, res) => {
 // @access   Public
 apiRouter.get('/', (req, res) => {
 	Owner.find()
-		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
+		//	.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
 		.then((owners) => res.json(owners))
 		.catch((err) => res.status(404).json({ owners: 'There are no owners' }));
 });
