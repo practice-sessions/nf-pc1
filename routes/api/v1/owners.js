@@ -1,5 +1,5 @@
 const express = require('express');
-const apiRouter = express.Router();
+const apiRouter = express.Router({ mergeParams: true });
 const gravatar = require('gravatar');
 //const bcrypt = require('bcryptjs');
 
@@ -15,7 +15,7 @@ apiRouter.get('/test', (req, res) => res.json({ message: 'Owners does work!' }))
 // @desc    Get owner by Id route
 // @access   Public
 apiRouter.get('/:ownerId', (req, res) => {
-	Owner.findOne({ owner: req.params.ownerId })
+	Owner.findById(req.params.ownerId)
 		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
 		.then((owner) => res.json(owner));
 });
@@ -24,7 +24,7 @@ apiRouter.get('/:ownerId', (req, res) => {
 // @route   GET api/v1/owners/all
 // @desc    Get all owners route
 // @access   Public
-apiRouter.get('/all', (req, res) => {
+apiRouter.get('/', (req, res) => {
 	Owner.find()
 		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
 		.then((owners) => res.json(owners))
