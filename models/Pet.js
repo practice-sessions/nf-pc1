@@ -3,18 +3,20 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const PetSchema = new Schema({
-	user: {
-		type: Schema.Types.ObjectId,
-		ref: 'users'
-	},
 	petname: {
 		type: String,
-		required: 'Whats your pets name please?',
-		max: 12
+		required: 'Please enter pet name'
+	},
+	owner: {
+		type: Schema.Types.ObjectId,
+		ref: 'owners'
+	},
+	petcolour: {
+		type: String
 	},
 	pettype: {
 		type: String,
-		required: 'Is your pet a dog, cat or bunny rabit?'
+		required: 'Is your pet a dog, cat or bunny rabbit?'
 	},
 	petbreed: {
 		type: String
@@ -24,8 +26,9 @@ const PetSchema = new Schema({
 	},
 	firsteverarrivaldate: {
 		type: Date,
-		default: Date.now
+		default: ''
 	},
+	/*
 	arrivaldate: {
 		type: Date,
 		default: Date.now
@@ -34,10 +37,11 @@ const PetSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	*/
 	createddate: {
 		type: Date,
 		default: Date.now
 	}
 });
 
-module.exports = Pet = mongoose.module('pets', PetSchema);
+module.exports = Pet = mongoose.model('pets', PetSchema);
