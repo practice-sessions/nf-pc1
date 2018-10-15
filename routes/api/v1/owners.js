@@ -32,11 +32,14 @@ apiRouter.get('/', (req, res) => {
 // @access   Public
 apiRouter.get('/:ownerId', (req, res) => {
 	Owner.findById(req.params.ownerId)
-		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
-		.exec()
+		//.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
+		//.exec()
 		.then((owner) => {
+			res.json(owner);
+			/*
 			const pets = owner.pets || [];
 			res.json({ owner, pets });
+			*/
 		})
 		.catch((err) => res.status(404).json({ owner: 'This owner doesnt exist on our records' }));
 });
