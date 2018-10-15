@@ -1,25 +1,21 @@
 const express = require('express');
+// Include {mergeParams; true} in file where the nested params reside.
+/* 
+mergeParams tells apiRouter to merge parameters that are created on this set of routes with the ones from its parents
+*/
 const apiRouter = express.Router({ mergeParams: true });
 const gravatar = require('gravatar');
 //const bcrypt = require('bcryptjs');
 
 // Load Owner model
 const Owner = require('../../../models/Owner');
+// Load Pet model
+const Pet = require('../../../models/Pet');
 
 // @route   GET api/v1/owners/test
 // @desc    Tests owners route
 // @access   Public
 apiRouter.get('/test', (req, res) => res.json({ message: 'Owners does work!' }));
-
-// @route   GET api/v1/owners/:ownerId
-// @desc    Get owner by Id route
-// @access   Public
-apiRouter.get('/:ownerId', (req, res) => {
-	Owner.findById(req.params.ownerId)
-		//	.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
-		.then((owner) => res.json(owner));
-});
-//.catch((err) => res.status(404).json({ owner: 'This owner doesnt exist on our records' }));
 
 // @route   GET api/v1/owners/all
 // @desc    Get all owners route
@@ -29,6 +25,20 @@ apiRouter.get('/', (req, res) => {
 		//	.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
 		.then((owners) => res.json(owners))
 		.catch((err) => res.status(404).json({ owners: 'There are no owners' }));
+});
+
+// @route   GET api/v1/owners/:ownerId
+// @desc    Get owner by Id route
+// @access   Public
+apiRouter.get('/:ownerId', (req, res) => {
+	Owner.findById(req.params.ownerId)
+		.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
+		.exec()
+		.then((owner) => {
+			const pets = owner.pets || [];
+			res.json({ owner, pets });
+		})
+		.catch((err) => res.status(404).json({ owner: 'This owner doesnt exist on our records' }));
 });
 
 // @route   POST api/v1/owners/register
@@ -70,6 +80,37 @@ apiRouter.post('/register', (req, res) => {
 
 			newOwner.save().then((owner) => res.json(owner)).catch((err) => console.log(err));
 		}
+	});
+});
+
+// @route   GET api/v1/owners/:ownerId/pets/new
+// @desc    Form to RENDER new owner's pet route - probably accessed thru ToDo page
+// @access  Public
+apiRouter.get('/:ownerId/pets/new', (req, res) => {
+	Owner.findById(req.params.ownerId).then((owner) => {
+		Pet.find().then((pets) => {
+			console.log('newOwnerPet', { owner, pets });
+			//res.json('newOwnerPetForm', { owner, pets });
+		});
+	});
+});
+
+// @route   POST api/v1/owners/:ownerId/pets/new
+// @desc    Form to RECEIVE new owner's pet route: though its a POST
+// request, its actual usage is not for inserting documents, but for
+// adding "references to other documents" to a specific owner (user's) document
+// @access  Public
+apiRouter.post('/:ownerId/pets', (req, res) => {
+	// Update command used is $addToSet instead of $push
+	// to avoid duplicate insertion. If we add a new pet to
+	// the list of pets, it wont duplicate itself if its already
+	// existing in the list.
+	Owner.findByIdAndUpdate(req.params.ownerId, {
+		$addToSet: { pets: req.body.petId }
+	}).then(() => {
+		//console.log('pet');
+		//return res.json(pet);
+		return res.redirect('/owners/${req.params.ownerId}');
 	});
 });
 

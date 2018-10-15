@@ -1,9 +1,5 @@
 const express = require('express');
-// Include {mergeParams; true} in file where the nested params reside.
-/* 
-mergeParams tells apiRouter to merge parameters that are created on this set of routes with the ones from its parents
-*/
-const apiRouter = express.Router({ mergeParams: true });
+const apiRouter = express.Router();
 
 // Load Pet model
 const Pet = require('../../../models/Pet');
@@ -13,16 +9,24 @@ const Pet = require('../../../models/Pet');
 // @access   Public
 apiRouter.get('/test', (req, res) => res.json({ message: 'Pets does work!' }));
 
-// @route   GET api/v1/pets
-// @desc    Get pets route
+// @route   GET api/v1/pets/all
+// @desc    Get all pets route
 // @access   Public
 apiRouter.get('/', (req, res) => {
 	Pet.find()
 		.then((pets) => {
 			return res.json(pets);
 		})
+		/*
+		.post('/', (req, res) => {
+			Pet.create(req.body)
+				.then((pet) => {
+					return res.redirect('/');
+        })
+        */
 		.catch((err) => res.json(err));
 });
+//});
 
 // @route   POST api/v1/pets/register
 // @desc    Register pet route
@@ -47,6 +51,17 @@ apiRouter.post('/register', (req, res) => {
 	});
 
 	newPet.save().then((pet) => res.json(pet)).catch((err) => res.json(err));
+});
+
+// @route   GET api/v1/pet
+// @desc    Form to render new pet thats just being entered route
+// @access   Public
+apiRouter.get('/new', (req, res) => {
+	if (!newPet) {
+		return res.status(404).json({ error: 'Something went wrong here, no new pet entered!' });
+	}
+
+	return res.json('newPet');
 });
 
 module.exports = apiRouter;
