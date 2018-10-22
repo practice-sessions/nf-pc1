@@ -15,9 +15,16 @@ apiRouter.get('/test', (req, res) => res.json({ message: 'Todos does work!' }));
 apiRouter.get('/all', (req, res) => {
 	Todo.find()
 		.then((todos) => {
-			res.json(todos);
+			if (todos) {
+				res.json(todos);
+			} else {
+				res.status(404).json({ todos: 'There is nothing on your todos list' });
+			}
 		})
-		.catch((err) => res.status(404).json({ todo: 'There is nothing on your todos list' }));
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
 });
 
 // @route   POST api/v1/todos
@@ -26,9 +33,16 @@ apiRouter.get('/all', (req, res) => {
 apiRouter.post('/', (req, res) => {
 	Todo.create(req.body)
 		.then((newTodo) => {
-			res.status(201).json(newTodo);
+			if (newTodo) {
+				res.status(201).json(newTodo);
+			} else {
+				res.status(404).json({ newTodo: 'There is nothing new todo' });
+			}
 		})
-		.catch((err) => res.send(err));
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
 });
 
 // @route   GET api/v1/todos/:todoId
@@ -37,9 +51,16 @@ apiRouter.post('/', (req, res) => {
 apiRouter.get('/:todoId', (req, res) => {
 	Todo.findById(req.params.todoId)
 		.then((foundTodo) => {
-			res.json(foundTodo);
+			if (foundToDo) {
+				res.json(foundTodo);
+			} else {
+				res.status(404).json({ TodoNotFound: 'There are no todos' });
+			}
 		})
-		.catch((err) => res.send(err));
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
 });
 
 // @route   POST api/v1/todos/:todoId
@@ -47,10 +68,17 @@ apiRouter.get('/:todoId', (req, res) => {
 // @access  Public
 apiRouter.post('/:todoId', (req, res) => {
 	Todo.findOneAndUpdate({ _id: req.params.todoId }, req.body)
-		.then((todo) => {
-			res.json(todo);
+		.then((updatedTodo) => {
+			if (updatedTodo) {
+				res.json(updatedTodo);
+			} else {
+				res.status(404).json({ updateOfTodo: 'Could not update todos' });
+			}
 		})
-		.catch((err) => res.send(err));
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
 });
 
 // @route   DELETE api/v1/todos/:todoId
@@ -61,7 +89,10 @@ apiRouter.delete('/:todoId', (req, res) => {
 		.then(() => {
 			res.json({ item: 'has now been deleted...' });
 		})
-		.catch((err) => res.send(err));
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
 });
 
 module.exports = apiRouter;

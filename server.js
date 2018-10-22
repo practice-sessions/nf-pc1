@@ -19,7 +19,12 @@ const db = require('./config/keys').mongoURI;
 
 // Connect to MongoDB
 mongoose.set('debug', true);
-mongoose.connect(db).then(() => console.log('MongoDB Connected')).catch((err) => console.log(err));
+//mongoose.set('useFindAndModify', true);
+mongoose.set('useCreateIndex', true);
+mongoose
+	.connect(db, { useNewUrlParser: true })
+	.then(() => console.log('MongoDB Connected'))
+	.catch((err) => console.log(err));
 
 app.get('/', (req, res) => res.send('Hello NF'));
 

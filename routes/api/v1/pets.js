@@ -17,7 +17,7 @@ apiRouter.get('/', (req, res) => {
 		.then((pets) => {
 			return res.json(pets);
 		})
-		/*
+		/* 
 		.post('/', (req, res) => {
 			Pet.create(req.body)
 				.then((pet) => {

@@ -1,7 +1,7 @@
 const express = require('express');
-// Include {mergeParams; true} in file where the nested params reside.
-/* 
-mergeParams tells apiRouter to merge parameters that are created on this set of routes with the ones from its parents
+/* Include {mergeParams; true} in file where the nested params reside.
+	mergeParams tells apiRouter to merge parameters that are created on 
+	this set of routes with the ones from its parents  
 */
 const apiRouter = express.Router({ mergeParams: true });
 const gravatar = require('gravatar');
@@ -23,8 +23,17 @@ apiRouter.get('/test', (req, res) => res.json({ message: 'Owners does work!' }))
 apiRouter.get('/', (req, res) => {
 	Owner.find()
 		//	.populate('owner', [ 'name', 'contactnumber', 'pets', 'address' ])
-		.then((owners) => res.json(owners))
-		.catch((err) => res.status(404).json({ owners: 'There are no owners' }));
+		.then((owners) => {
+			if (owners) {
+				res.json(owners);
+			} else {
+				res.status(404).json({ owners: 'There are no owners' });
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			//	res.status(500).json(err);
+		});
 });
 
 // @route   GET api/v1/owners/:ownerId
@@ -104,10 +113,12 @@ apiRouter.get('/:ownerId/pets/new', (req, res) => {
 // adding "references to other documents" to a specific owner (user's) document
 // @access  Public
 apiRouter.post('/:ownerId/pets', (req, res) => {
-	// Update command used is $addToSet instead of $push
-	// to avoid duplicate insertion. If we add a new pet to
-	// the list of pets, it wont duplicate itself if its already
-	// existing in the list.
+	/*
+	 Update command used is $addToSet instead of $push
+	 to avoid duplicate insertion. If we add a new pet to
+	 the list of pets, it wont duplicate itself if its already
+	 existing in the list.
+	*/
 	Owner.findByIdAndUpdate(req.params.ownerId, {
 		$addToSet: { pets: req.body.petId }
 	}).then(() => {
