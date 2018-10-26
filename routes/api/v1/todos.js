@@ -124,8 +124,10 @@ apiRouter.delete('/:todoId', (req, res) => {
 // @access  Public
 apiRouter.get('/:petId/pets/new', (req, res) => {
 	Pet.findById(req.params.petId).then((pet) => {
-		Pet.find().then((pets) => {
-			console.log('newPetData', { newarrivaldate, expectedexitdate, actualexitdate, pets });
+		Pet.find().then((_pet) => {
+			console.log('newPetData', {
+				/*newarrivaldate, expectedexitdate, actualexitdate, */ pet
+			});
 			//res.json('newPetDataForm', { newarrivaldate, expectedexitdate, actualexitdate, pets });
 		});
 	});
