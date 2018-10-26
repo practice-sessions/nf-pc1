@@ -109,9 +109,9 @@ apiRouter.get('/:ownerId/pets/new', (req, res) => {
 });
 
 // @route   POST api/v1/owners/:ownerId/pets
-// @desc    Form to RECEIVE new owner's pet route: though its a POST
-// request, its actual usage is not for inserting documents, but for
-// adding "references to other documents" to a specific owner (user's) document
+// @desc    Form to RECEIVE new owners pet route: ALTHOUGH its a POST
+// request, its actual usage is NOT for INSERTing documents, BUT for
+// ADDing "REFERENCES TO other DOCUMENTS" to a specific owner's (user's) document
 // @access  Public
 apiRouter.post('/:ownerId/pets', (req, res) => {
 	/* 

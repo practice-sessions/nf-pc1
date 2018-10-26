@@ -7,6 +7,8 @@ const apiRouter = express.Router({ mergeParams: true });
 
 // Load Todo model
 const Todo = require('../../../models/Todo');
+// Load Pet model
+const Pet = require('../../../models/Pet');
 // Load Owner model
 const Owner = require('../../../models/Owner');
 
@@ -125,11 +127,39 @@ apiRouter.delete('/:todoId', (req, res) => {
 apiRouter.get('/:petId/pets/new', (req, res) => {
 	Pet.findById(req.params.petId).then((pet) => {
 		Pet.find().then((_pet) => {
-			console.log('newPetData', {
+			console.log('addDataPet', {
 				/*newarrivaldate, expectedexitdate, actualexitdate, */ pet
 			});
-			//res.json('newPetDataForm', { newarrivaldate, expectedexitdate, actualexitdate, pets });
+			//res.json('addDataPetForm', { newarrivaldate, expectedexitdate, actualexitdate, pets });
 		});
+	});
+});
+
+// @route   POST api/v1/owners/:ownerId/pets
+// @desc    Form to RECEIVE new todos pet route: ALTHOUGH its a POST
+// request, its actual usage is NOT for INSERTing documents, BUT for
+// ADDing "REFERENCES TO other DOCUMENTS" to a specific owner's (pets) document
+// @access  Public
+apiRouter.post('/:petId/pets', (req, res) => {
+	const addDataPet = new Pet({
+		newarrivaldate: req.body.newarrivaldate,
+		expectedexitdate: req.body.expectedexitdate,
+		actualexitdate: req.body.actualexitdate
+	});
+	console.log(addDataPet);
+
+	/* 
+	 Update command used is $addToSet instead of $push
+	 to avoid duplicate insertion. If we add a new pet to
+	 the list of pets, it wont duplicate itself if its already
+	 existing in the list.
+	*/
+	Pet.findByIdAndUpdate(req.params.petId, {
+		$addToSet: { pet: req.body.addDataPet }
+	}).then(() => {
+		console.log('newarrivaldate', 'expectedexitdate', 'actualexitdate', 'pet');
+		//return res.json(pet);
+		return res.redirect('/todos/${req.params.todoId}');
 	});
 });
 

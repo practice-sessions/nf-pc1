@@ -28,21 +28,16 @@ const PetSchema = new Schema({
 		type: Date,
 		default: ''
 	},
-
 	newarrivaldate: {
 		type: Date,
 		default: Date.now
 	},
-	/*
 	expectedexitdate: {
-		type: Date,
-		default: Date.now
+		type: Date
 	},
 	actualexitdate: {
-		type: Date,
-		default: Date.now
+		type: Date
 	},
-	*/
 	createddate: {
 		type: Date,
 		default: Date.now
