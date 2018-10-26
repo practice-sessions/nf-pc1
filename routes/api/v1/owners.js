@@ -1,5 +1,5 @@
 const express = require('express');
-/* Include {mergeParams; true} in file where the nested params reside.
+/* Include {mergeParams; true} in file where the nested params reside. 
 	mergeParams tells apiRouter to merge parameters that are created on 
 	this set of routes with the ones from its parents  
 */
@@ -123,7 +123,7 @@ apiRouter.post('/:ownerId/pets', (req, res) => {
 	Owner.findByIdAndUpdate(req.params.ownerId, {
 		$addToSet: { pets: req.body.petId }
 	}).then(() => {
-		//console.log('pet');
+		console.log('pet');
 		//return res.json(pet);
 		return res.redirect('/owners/${req.params.ownerId}');
 	});
