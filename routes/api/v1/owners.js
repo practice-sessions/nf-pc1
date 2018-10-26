@@ -96,7 +96,8 @@ apiRouter.post('/register', (req, res) => {
 });
 
 // @route   GET api/v1/owners/:ownerId/pets/new
-// @desc    Form to RENDER new owner's pet route - probably accessed thru ToDo page
+// @desc    Form to RENDER new owner's pet route - probably
+// accessed thru ToDo page. If so, HOW?
 // @access  Public
 apiRouter.get('/:ownerId/pets/new', (req, res) => {
 	Owner.findById(req.params.ownerId).then((owner) => {
@@ -107,13 +108,13 @@ apiRouter.get('/:ownerId/pets/new', (req, res) => {
 	});
 });
 
-// @route   POST api/v1/owners/:ownerId/pets/new
+// @route   POST api/v1/owners/:ownerId/pets
 // @desc    Form to RECEIVE new owner's pet route: though its a POST
 // request, its actual usage is not for inserting documents, but for
 // adding "references to other documents" to a specific owner (user's) document
 // @access  Public
 apiRouter.post('/:ownerId/pets', (req, res) => {
-	/*
+	/* 
 	 Update command used is $addToSet instead of $push
 	 to avoid duplicate insertion. If we add a new pet to
 	 the list of pets, it wont duplicate itself if its already

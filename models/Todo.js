@@ -20,7 +20,7 @@ const TodoSchema = new Schema({
 		default: false
 	},
 	meettime: {
-		type: String // Coud be datecalendar?
+		type: String // Could be datecalendar?
 	},
 	approxmeetduration: {
 		type: String
